@@ -44,35 +44,35 @@ pub const Core = struct {
         time.setup();
         
         options.init_fn() catch |e| {
-            err("{}", .{e});
+            std.log.err("{}", .{e});
             std.c.exit(1);
             // @panic("error encountered during init, panicking");
         };
-        success("initialized successfully", .{});
+        std.log.notice("engine initialized successfully", .{});
     }
 
     fn frame() callconv(.C) void {
         options.frame_fn() catch |e| {
-            err("{}", .{e});
+            std.log.err("{}", .{e});
             std.c.exit(1);
         };
     }
 
     fn event(ev: [*c]const app.Event) callconv(.C) void {
         options.event_fn(ev) catch |e| {
-            err("{}", .{e});
+            std.log.err("{}", .{e});
             std.c.exit(1);
         };
     }
 
     fn cleanup() callconv(.C) void {
         options.cleanup_fn() catch |e| {
-            err("{}", .{e});
+            std.log.err("{}", .{e});
             std.c.exit(1);
         };
 
         sg.shutdown();
 
-        success("cleaned up successfully", .{});
+        std.log.notice("engine cleaned up successfully", .{});
     }
 };

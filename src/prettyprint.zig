@@ -17,35 +17,24 @@ pub fn println(comptime fmt: string, args: anytype) void {
     print(fmt ++ "\n", args);
 }
 
-fn log(
-    comptime message_level: Level,
+pub fn log(
+    comptime message_level: std.log.Level,
+    comptime scope: @TypeOf(.EnumLiteral),
     comptime fmt: string,
     args: anytype
 ) void {
     const level_txt = switch (message_level) {
-        .err => "<red>error",
-        .warn => "<yellow>warning",
-        .info => "info",
-        .success => "<green>success",
+        .emerg   => "<magenta>emerg",
+        .alert   => "<red>alert",
+        .crit    => "<red>crit",
+        .err    => "<red>error",
+        .warn   => "<yellow>warning",
+        .notice => "<green>notice",
+        .info   => "info",
+        .debug  => "<blue>debug",
     };
-
-    println("<b>" ++ level_txt ++ ":<r> " ++ fmt, args);
-}
-
-pub fn err(comptime fmt: string, args: anytype) void {
-    log(.err, fmt , args);
-}
-
-pub fn warn(comptime fmt: string, args: anytype) void {
-    log(.warn, fmt , args);
-}
-
-pub fn info(comptime fmt: string, args: anytype) void {
-    log(.info, fmt , args);
-}
-
-pub fn success(comptime fmt: string, args: anytype) void {
-    log(.success, fmt , args);
+    const prefix2 = if (scope == .default) ": " else "(" ++ @tagName(scope) ++ "): ";
+    println("<b>" ++ level_txt ++ prefix2 ++ "<r>" ++ fmt, args);
 }
 
 // Valid colors:

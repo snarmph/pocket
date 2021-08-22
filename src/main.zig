@@ -155,18 +155,37 @@
 // }
 
 const std = @import("std");
+const err   = std.log.err;
+const warn  = std.log.warn;
+const info  = std.log.info;
+const debug = std.log.debug;
 const pretty = @import("prettyprint.zig");
-usingnamespace pretty;
 
 const sokol = @import("sokol/sokol.zig");
 const app   = sokol.app;
 
 const Core = @import("core.zig").Core;
+const Texture = @import("texture.zig").Texture;
 usingnamespace @import("sprite_batcher.zig");
 
+const stb = @import("stb/stb.zig");
+
+const GpaType = std.heap.GeneralPurposeAllocator(.{});
+var gpa = GpaType{};
+var batch: SpriteBatcher = undefined;
+var txt: Texture = undefined;
+
+pub fn log(
+    comptime level: std.log.Level,
+    comptime scope: @TypeOf(.EnumLiteral),
+    comptime format: []const u8,
+    args: anytype
+) void {
+    pretty.log(level, scope, format, args);
+}
+
 pub fn main() !void {
-    const spr: Sprite = .{};
-    warn("spr: {}", .{spr});
+    std.log.notice("test: {}", .{12});
     Core.run(.{
         .init_fn    = init,
         .frame_fn   = frame,
@@ -179,9 +198,16 @@ pub fn main() !void {
 }
 
 fn init() !void {
+    txt = try Texture.load("data/red.png");
+
+    batch = .{ .allocator = &gpa.allocator };
+    batch.init();
 }
 
 fn frame() !void {
+    batch.drawSprite(&.{
+        .texture = txt,
+    });
 }
 
 fn event(e: *const app.Event) !void {
@@ -189,4 +215,10 @@ fn event(e: *const app.Event) !void {
 }
 
 fn cleanup() !void {
+    txt.destroy();
+
+    if(gpa.deinit()) {
+        err("Leaks found", .{});
+        return error.MemoryLeak;
+    }
 }

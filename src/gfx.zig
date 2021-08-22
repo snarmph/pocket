@@ -1,5 +1,4 @@
-const Vec2 = @import("math.zig").Vec2;
-const Vec3 = @import("math.zig").Vec3;
+usingnamespace @import("math.zig");
 
 pub const Vertex = packed struct {
     x: f32, y: f32, z: f32,
