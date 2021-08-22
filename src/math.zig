@@ -91,6 +91,73 @@ pub const Vec3 = packed struct {
     }
 };
 
+pub const Mat3 = packed struct {
+    m: [3][3]f32,
+    
+    pub fn identity() Mat3 {
+        return Mat3 {
+            .m = [_][3]f32 {
+                .{ 1.0, 0.0, 0.0 },
+                .{ 0.0, 1.0, 0.0 },
+                .{ 0.0, 0.0, 1.0 },
+            },
+        };
+    }
+
+    pub fn zero() Mat3 {
+        return Mat3 {
+            .m = [_][3]f32 {
+                .{ 0.0, 0.0, 0.0 },
+                .{ 0.0, 0.0, 0.0 },
+                .{ 0.0, 0.0, 0.0 },
+            },
+        };
+    }
+
+    pub fn mul(left: Mat3, right: Mat3) Mat3 {
+        var res = Mat3.zero();
+        var col: usize = 0;
+        while (col < 3): (col += 1) {
+            var row: usize = 0;
+            while (row < 3): (row += 1) {
+                res.m[col][row] = left.m[0][row] * right.m[col][0] +
+                                  left.m[1][row] * right.m[col][1] +
+                                  left.m[2][row] * right.m[col][2];
+            }
+        }
+        return res;
+    }
+
+    pub fn rotate(angle: f32, axis_unorm: Vec3) Mat3 {
+        // TODO
+        return _;
+    }
+
+    pub fn translate(mat: *Mat3, translation: Vec2) void {
+        mat.m[2][0] += translation.x;
+        mat.m[2][1] += translation.y;
+    }
+
+    pub fn scale(mat: *Mat3, scale: Vec2) void {
+        mat.m[0][0] *= scale.x;
+        mat.m[1][1] *= scale.y;
+    }
+
+    pub fn fromTranslation(translation: Vec2) Mat3 {
+        var res = Mat3.identity();
+        res.m[2][0] = translation.x;
+        res.m[2][1] = translation.y;
+        return res;
+    }
+
+    pub fn fromScale(scale: Vec2) Mat3 {
+        var res = Mat3.identity();
+        res.m[0][0] = scale.x;
+        res.m[1][1] = scale.y;
+        return res;
+    }
+};
+
 pub const Mat4 = packed struct {
     m: [4][4]f32,
 

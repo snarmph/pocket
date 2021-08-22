@@ -24,14 +24,14 @@ pub fn log(
     args: anytype
 ) void {
     const level_txt = switch (message_level) {
-        .emerg   => "<magenta>emerg",
-        .alert   => "<red>alert",
-        .crit    => "<red>crit",
-        .err    => "<red>error",
-        .warn   => "<yellow>warning",
-        .notice => "<green>notice",
-        .info   => "info",
-        .debug  => "<blue>debug",
+        .emerg   => "<magenta>[EMERG]",
+        .alert   => "<red>[ALERT]",
+        .crit    => "<red>[CRIT]",
+        .err    => "<red>[ERROR]",
+        .warn   => "<yellow>[WARNING]",
+        .notice => "<green>[NOTICE]",
+        .info   => "[INFO]",
+        .debug  => "<blue>[DEBUG]",
     };
     const prefix2 = if (scope == .default) ": " else "(" ++ @tagName(scope) ++ "): ";
     println("<b>" ++ level_txt ++ prefix2 ++ "<r>" ++ fmt, args);

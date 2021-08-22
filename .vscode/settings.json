@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "cute_spritebatch.h": "c",
+        "string.h": "c"
+    }
+}

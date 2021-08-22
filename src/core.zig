@@ -1,7 +1,7 @@
 const std = @import("std");
 usingnamespace @import("prettyprint.zig");
 
-const sokol = @import("sokol");
+const sokol = @import("sokol/sokol.zig");
 const app   = sokol.app;
 const sg    = sokol.gfx;
 const sgapp = sokol.app_gfx_glue;
